@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ProductCard from './components/ProductCard';
 import './App.css';
+import RatingWidget from './components/RatingWidget';
 
 const initialProducts = [
   {
@@ -31,13 +32,36 @@ const initialProducts = [
 
 function App() {
 
+  const [products, setProducts] = useState(initialProducts);
+  const updateratings=(productId,rating) =>{
+      const updatedrting =  products.map((product)=>{
+        if(product.id===productId){
+          product.totalRatings = product.totalRatings+1;
+          product.avgRating = (((product.avgRating*product.totalRatings)+rating)/product.totalRatings).toFixed(1);
+        }
+        return product;
+       })
+       console.log(updatedrting)
+       setProducts(updatedrting)
+      
+  }
  
 
   return (
     <div>
-     {/* code here */}
+      <h1>Product List</h1>
+      <div className="product-list">
+        {products.map(product => (
+            <div>
+               <ProductCard key={product.id} {...product}/>
+               <RatingWidget productId={product.id} updaterating ={updateratings} />
+            </div>
+        
+        ))}
+      </div>
     </div>
   );
 }
+
 
 export default App;
